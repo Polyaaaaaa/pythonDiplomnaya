@@ -1,0 +1,30 @@
+{% extends 'diary/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row text-center">
+        {% for note in object_list %}
+        <div class="col-3">
+            <div class="card mb-4 box-shadow">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Запись</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title">{{ note.title }}</h1>
+                    <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                        <li>{{ note.body|truncatechars:100 }}</li>
+                    </ul>
+                    <a href="{% url 'diary:note_detail' note.id %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">Детали</a>
+                    {% if request.user == note.owner or perms.diary.can_unpublish_note %}
+                        <a href="{% url 'diary:note_update' note.id %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">Редактировать</a>
+                    {% endif %}
+                    {% if request.user == note.owner or perms.diary.can_delete_note %}
+                        <a href="{% url 'diary:note_delete' note.id %}" class="btn btn-danger">Удалить</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
