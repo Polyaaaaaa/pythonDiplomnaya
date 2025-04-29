@@ -10,7 +10,7 @@ urlpatterns = [
     path("", HomeView.as_view(), name="home"),
     path("register/", RegisterView.as_view(), name="register"),
     path("login/", CustomLoginView.as_view(), name="login"),
-    path("logout/", CustomLogoutView.as_view(next_page="mailing_management:home"), name="logout"),
+    path("logout/", CustomLogoutView.as_view(next_page="diary:home"), name="logout"),
 
     # Восстановление пароля
     path('password-reset/', PasswordResetView_.as_view(), name='password_reset'),

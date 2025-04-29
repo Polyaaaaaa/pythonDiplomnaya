@@ -48,6 +48,7 @@
         border-radius: 2rem;
         transition: all 0.3s ease;
         box-shadow: none;
+        margin-right: 0.5rem;
     }
 
     .note-link:hover {
@@ -79,6 +80,51 @@
         border-color: #ff6347;
         outline: none;
     }
+
+    .search-form {
+        margin-top: 2rem;
+        margin-bottom: 3rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .search-input {
+        width: 300px;
+        padding: 0.5rem 1rem;
+        border: 2px solid #DB7093;
+        border-radius: 2rem;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+        border-color: #DB7093;
+        box-shadow: 0 0 5px rgba(219, 112, 147, 0.5);
+    }
+
+    .search-btn {
+        border: 2px solid #DB7093;
+        background-color: transparent;
+        color: #DB7093;
+        border-radius: 2rem;
+        padding: 0.5rem 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .search-btn:hover {
+        background-color: #DB7093;
+        color: white;
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(219, 112, 147, 0.3);
+    }
+
+    .search-btn:focus {
+        outline: none;
+        box-shadow: none;
+        border-color: #DB7093;
+    }
 </style>
 
 <div style="background-color: #FFF8DC; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 10vh;">
@@ -87,7 +133,12 @@
         <a href="{% url 'diary:note_create' %}" class="btn btn-outline-primary btn-lg custom-btn">Хочу поделиться мыслями!</a>
     </div>
 
-    <div class="container mt-5">
+    <form method="get" action="{% url 'diary:home' %}" class="search-form">
+        <input type="text" name="q" placeholder="Поиск по записям..." value="{{ request.GET.q }}" class="search-input">
+        <button type="submit" class="search-btn">Искать</button>
+    </form>
+
+    <div class="container mt-2">
         <div class="row">
             {% for note in notes %}
                 <div class="col-md-4 mb-4">

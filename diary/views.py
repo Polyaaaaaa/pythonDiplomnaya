@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import Q
 from django.http import HttpResponseForbidden
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
@@ -12,11 +13,24 @@ from diary.models import Note
 
 class HomeView(ListView):
     model = Note
-    template_name = "diary/home.html"
-    context_object_name = "notes"
+    template_name = 'diary/home.html'
+    context_object_name = 'notes'
+    paginate_by = 10  # если нужна пагинация
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('q')
+        if query:
+            queryset = queryset.filter(
+                Q(title__icontains=query) |
+                Q(body__icontains=query)
+            )
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['title'] = "Мои заметки"
+        context['query'] = self.request.GET.get('q', '')
         return context
 
 

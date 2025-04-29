@@ -3,16 +3,12 @@ import secrets
 
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetDoneView, \
     PasswordResetConfirmView, PasswordResetCompleteView
-from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 from django.contrib import messages
 
-from config.settings import EMAIL_HOST_USER
 from .forms import CustomUserCreationForm
-from .models import CustomUser
 
 
 # Create your views here.
