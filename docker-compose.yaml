@@ -38,27 +38,6 @@ services:
       - "6379"
     restart: always
 
-  celery:
-    build: .
-    command: celery -A your_project_name worker --loglevel=info
-    env_file:
-      - .env
-    depends_on:
-      - redis
-      - db
-    volumes:
-      - .:/code
-
-  celery-beat:
-    build: .
-    command: celery -A your_project_name beat --loglevel=info
-    env_file:
-      - .env
-    depends_on:
-      - redis
-      - db
-    volumes:
-      - .:/code
 
   nginx:
     build: .
