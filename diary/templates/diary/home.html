@@ -146,10 +146,7 @@
                         <h3 class="note-title">{{ note.title }}</h3>
                         <p>{{ note.body|truncatewords:20 }}</p>
                         <a href="{% url 'diary:note_detail' note.pk %}" class="btn note-link">Читать полностью</a>
-                        <form action="{% url 'diary:note_delete' note.pk %}" method="post" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="btn delete-btn">Удалить</button>
-                        </form>
+                        <a href="{% url 'diary:note_delete' note.pk %}" class="btn delete-btn">Удалить</a>
                     </div>
                 </div>
             {% empty %}

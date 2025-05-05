@@ -44,9 +44,6 @@ INSTALLED_APPS = [
     "django_filters",
     "rest_framework",
     "rest_framework_simplejwt",
-    "drf_yasg",
-    "corsheaders",
-    "django_celery_beat",
 ]
 
 CELERY_BROKER_URL = "redis://localhost:6379/0"

@@ -18,6 +18,7 @@ class NoteForm(StyleFormMixin, ModelForm):
     class Meta:
         model = Note
         fields = "__all__"
+        exclude = ['user']
 
     def clean_title(self):
         title = self.cleaned_data["title"]

@@ -34,7 +34,7 @@ class HomeView(ListView):
         return context
 
 
-class NoteCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+class NoteCreateView(CreateView):
     model = Note
     form_class = NoteForm
     template_name = "diary/note_form.html"
@@ -48,7 +48,7 @@ class NoteCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return super().form_valid(form)
 
 
-class NoteUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class NoteUpdateView(UpdateView):
     model = Note
     form_class = NoteForm
     template_name = "diary/note_form.html"
@@ -60,13 +60,14 @@ class NoteUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return reverse("diary:note_detail", args=[self.object.pk])
 
 
-class NoteDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class NoteDeleteView(DeleteView):
     model = Note
     template_name = "diary/note_confirm_delete.html"
     success_url = reverse_lazy("diary:home")
 
     def test_func(self):
-        return self.request.user.has_perm("diary.can_delete_note")
+        note = self.get_object()
+        return self.request.user == note.user or self.request.user.has_perm("diary.can_delete_note")
 
     def post(self, request, *args, **kwargs):
         if not self.test_func():
@@ -74,7 +75,7 @@ class NoteDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return super().post(request, *args, **kwargs)
 
 
-class NoteDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+class NoteDetailView(DetailView):
     model = Note
     template_name = "diary/note_detail.html"
     context_object_name = "note"
@@ -83,7 +84,7 @@ class NoteDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         return self.request.user.has_perm("diary.view_all_note")
 
 
-class NoteListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+class NoteListView(ListView):
     model = Note
     template_name = "diary/note_list.html"
     context_object_name = "notes"
@@ -98,4 +99,3 @@ class NoteListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["can_delete"] = self.request.user.has_perm("diary.can_delete_note")
         return context
-
