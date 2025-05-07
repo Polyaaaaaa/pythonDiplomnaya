@@ -1,0 +1,58 @@
+{% extends 'diary/base.html' %}
+
+{% block content %}
+<style>
+    .form-card {
+        background-color: transparent;
+        border: 2px solid #DB7093;
+        border-radius: 1rem;
+        padding: 1rem;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(219, 112, 147, 0.3);
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .submit-btn {
+        border-color: #DB7093;
+        color: #DB7093;
+        border-radius: 2rem;
+        transition: all 0.3s ease;
+        padding: 0.5rem 1.5rem;
+    }
+
+    .submit-btn:hover {
+        background-color: #DB7093;
+        color: white;
+    }
+
+    .submit-btn:focus {
+        outline: none;
+        box-shadow: none;
+    }
+</style>
+
+<div class="container-fluid" style="background-color: #FFF8DC; min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+    <div class="col-md-6">
+        <div class="form-card">
+            <div class="text-center mb-4">
+                <h2 style="color: #DB7093;">Подтверждение удаления</h2>
+            </div>
+            <p class="text-center text-danger">Вы уверены, что хотите удалить эту запись?</p>
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn submit-btn">Удалить</button>
+                    <a href="{% url 'diary:home' %}" class="btn btn-secondary" style="border-radius: 2rem;">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

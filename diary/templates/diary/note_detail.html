@@ -1,0 +1,103 @@
+{% extends 'diary/base.html' %}
+
+{% block content %}
+<style>
+    .custom-btn {
+        border-color: #DB7093;
+        color: #DB7093;
+        border-radius: 2rem;
+        transition: all 0.3s ease;
+        transform: scale(1);
+        box-shadow: none;
+    }
+
+    .custom-btn:hover {
+        background-color: #DB7093;
+        color: white;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        transform: scale(1.05);
+        border-color: #DB7093;
+    }
+
+    .custom-btn:focus, .custom-btn:active {
+        box-shadow: none;
+        border-color: #DB7093;
+        outline: none;
+    }
+
+    .note-card {
+        background-color: transparent;
+        border: 2px solid #DB7093;
+        border-radius: 1rem;
+        padding: 1rem;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .note-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(219, 112, 147, 0.3);
+    }
+
+    .note-title {
+        color: #DB7093;
+    }
+
+    .note-link {
+        border-color: #DB7093;
+        color: #DB7093;
+        border-radius: 2rem;
+        transition: all 0.3s ease;
+        box-shadow: none;
+    }
+
+    .note-link:hover {
+        background-color: #DB7093;
+        color: white;
+    }
+
+    .note-link:focus, .note-link:active {
+        box-shadow: none;
+        border-color: #DB7093;
+        outline: none;
+    }
+
+    .edit-btn {
+        border-color: #8A2BE2;
+        color: #8A2BE2;
+        border-radius: 2rem;
+        transition: all 0.3s ease;
+        box-shadow: none;
+    }
+
+    .edit-btn:hover {
+        background-color: #8A2BE2;
+        color: white;
+    }
+
+    .edit-btn:focus, .edit-btn:active {
+        box-shadow: none;
+        border-color: #8A2BE2;
+        outline: none;
+    }
+</style>
+
+<div style="background-color: #FFF8DC; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 10vh;">
+    <div class="text-center">
+        <h1 class="mb-4" style="color: #DB7093;">Hello, welcome to your personal diary!</h1>
+        <a href="{% url 'diary:note_create' %}" class="btn btn-outline-primary btn-lg custom-btn">Хочу поделиться мыслями!</a>
+    </div>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12 mb-4">
+                <div class="note-card">
+                    <h3 class="note-title">{{ note.title }}</h3>
+                    <p>{{ note.body }}</p>
+                    <a href="{% url 'diary:home' %}" class="btn note-link">Назад</a>
+                    <a href="{% url 'diary:note_update' note.pk %}" class="btn edit-btn" style="margin-top: 10px;">Редактировать</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

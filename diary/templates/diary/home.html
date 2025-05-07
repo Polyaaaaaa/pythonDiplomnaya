@@ -1,0 +1,158 @@
+{% extends 'diary/base.html' %}
+
+{% block content %}
+<style>
+    .custom-btn {
+        border-color: #DB7093;
+        color: #DB7093;
+        border-radius: 2rem;
+        transition: all 0.3s ease;
+        transform: scale(1);
+        box-shadow: none;
+    }
+
+    .custom-btn:hover {
+        background-color: #DB7093;
+        color: white;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        transform: scale(1.05);
+        border-color: #DB7093;
+    }
+
+    .custom-btn:focus, .custom-btn:active {
+        box-shadow: none;
+        border-color: #DB7093;
+        outline: none;
+    }
+
+    .note-card {
+        background-color: transparent;
+        border: 2px solid #DB7093;
+        border-radius: 1rem;
+        padding: 1rem;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .note-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(219, 112, 147, 0.3);
+    }
+
+    .note-title {
+        color: #DB7093;
+    }
+
+    .note-link {
+        border-color: #DB7093;
+        color: #DB7093;
+        border-radius: 2rem;
+        transition: all 0.3s ease;
+        box-shadow: none;
+        margin-right: 0.5rem;
+    }
+
+    .note-link:hover {
+        background-color: #DB7093;
+        color: white;
+    }
+
+    .note-link:focus, .note-link:active {
+        box-shadow: none;
+        border-color: #DB7093;
+        outline: none;
+    }
+
+    .delete-btn {
+        border-color: #ff6347;
+        color: #ff6347;
+        border-radius: 2rem;
+        transition: all 0.3s ease;
+        box-shadow: none;
+    }
+
+    .delete-btn:hover {
+        background-color: #ff6347;
+        color: white;
+    }
+
+    .delete-btn:focus, .delete-btn:active {
+        box-shadow: none;
+        border-color: #ff6347;
+        outline: none;
+    }
+
+    .search-form {
+        margin-top: 2rem;
+        margin-bottom: 3rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .search-input {
+        width: 300px;
+        padding: 0.5rem 1rem;
+        border: 2px solid #DB7093;
+        border-radius: 2rem;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+        border-color: #DB7093;
+        box-shadow: 0 0 5px rgba(219, 112, 147, 0.5);
+    }
+
+    .search-btn {
+        border: 2px solid #DB7093;
+        background-color: transparent;
+        color: #DB7093;
+        border-radius: 2rem;
+        padding: 0.5rem 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .search-btn:hover {
+        background-color: #DB7093;
+        color: white;
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(219, 112, 147, 0.3);
+    }
+
+    .search-btn:focus {
+        outline: none;
+        box-shadow: none;
+        border-color: #DB7093;
+    }
+</style>
+
+<div style="background-color: #FFF8DC; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 10vh;">
+    <div class="text-center">
+        <h1 class="mb-4" style="color: #DB7093;">Hello, welcome to your personal diary!</h1>
+        <a href="{% url 'diary:note_create' %}" class="btn btn-outline-primary btn-lg custom-btn">Хочу поделиться мыслями!</a>
+    </div>
+
+    <form method="get" action="{% url 'diary:home' %}" class="search-form">
+        <input type="text" name="q" placeholder="Поиск по записям..." value="{{ request.GET.q }}" class="search-input">
+        <button type="submit" class="search-btn">Искать</button>
+    </form>
+
+    <div class="container mt-2">
+        <div class="row">
+            {% for note in notes %}
+                <div class="col-md-4 mb-4">
+                    <div class="note-card">
+                        <h3 class="note-title">{{ note.title }}</h3>
+                        <p>{{ note.body|truncatewords:20 }}</p>
+                        <a href="{% url 'diary:note_detail' note.pk %}" class="btn note-link">Читать полностью</a>
+                        <a href="{% url 'diary:note_delete' note.pk %}" class="btn delete-btn">Удалить</a>
+                    </div>
+                </div>
+            {% empty %}
+                <p>У вас пока нет заметок.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
