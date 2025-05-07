@@ -1,7 +1,6 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponseForbidden
-from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 
@@ -9,17 +8,15 @@ from diary.forms import NoteForm
 from diary.models import Note
 
 
-# Create your views here.
-
-class HomeView(ListView):
+class HomeView(LoginRequiredMixin, ListView):
     model = Note
     template_name = 'diary/home.html'
     context_object_name = 'notes'
-    paginate_by = 10  # если нужна пагинация
+    paginate_by = 10
 
     def get_queryset(self):
-        queryset = super().get_queryset()
         query = self.request.GET.get('q')
+        queryset = Note.objects.filter(user=self.request.user)
         if query:
             queryset = queryset.filter(
                 Q(title__icontains=query) |
@@ -34,66 +31,57 @@ class HomeView(ListView):
         return context
 
 
-class NoteCreateView(CreateView):
+class NoteCreateView(LoginRequiredMixin, CreateView):
     model = Note
     form_class = NoteForm
     template_name = "diary/note_form.html"
     success_url = reverse_lazy("diary:home")
 
-    def test_func(self):
-        return self.request.user.has_perm("diary.can_create_note")
-
     def form_valid(self, form):
-        form.instance.user = self.request.user  # привязываем автора
+        form.instance.user = self.request.user  # Сохраняем автора
         return super().form_valid(form)
 
 
-class NoteUpdateView(UpdateView):
+class NoteUpdateView(LoginRequiredMixin, UpdateView):
     model = Note
     form_class = NoteForm
     template_name = "diary/note_form.html"
 
-    def test_func(self):
-        return self.request.user.has_perm("diary.can_edit_note")
+    def get_queryset(self):
+        return Note.objects.filter(user=self.request.user)
 
     def get_success_url(self):
         return reverse("diary:note_detail", args=[self.object.pk])
 
 
-class NoteDeleteView(DeleteView):
+class NoteDeleteView(LoginRequiredMixin, DeleteView):
     model = Note
     template_name = "diary/note_confirm_delete.html"
     success_url = reverse_lazy("diary:home")
 
-    def test_func(self):
-        note = self.get_object()
-        return self.request.user == note.user or self.request.user.has_perm("diary.can_delete_note")
+    def get_queryset(self):
+        return Note.objects.filter(user=self.request.user)
 
     def post(self, request, *args, **kwargs):
-        if not self.test_func():
-            return HttpResponseForbidden("У вас нет прав для удаления этой заметки.")
         return super().post(request, *args, **kwargs)
 
 
-class NoteDetailView(DetailView):
+class NoteDetailView(LoginRequiredMixin, DetailView):
     model = Note
     template_name = "diary/note_detail.html"
     context_object_name = "note"
 
-    def test_func(self):
-        return self.request.user.has_perm("diary.view_all_note")
+    def get_queryset(self):
+        return Note.objects.filter(user=self.request.user)
 
 
-class NoteListView(ListView):
+class NoteListView(LoginRequiredMixin, ListView):
     model = Note
     template_name = "diary/note_list.html"
     context_object_name = "notes"
 
-    def test_func(self):
-        return self.request.user.has_perm("diary.view_all_note")
-
     def get_queryset(self):
-        return super().get_queryset()
+        return Note.objects.filter(user=self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
