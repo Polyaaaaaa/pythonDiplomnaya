@@ -1,0 +1,72 @@
+{% extends 'diary/base.html' %}
+
+{% block content %}
+<style>
+    .form-card {
+        background-color: transparent;
+        border: 2px solid #DB7093;
+        border-radius: 1rem;
+        padding: 1rem;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(219, 112, 147, 0.3);
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .submit-btn {
+        border-color: #DB7093;
+        color: #DB7093;
+        border-radius: 2rem;
+        transition: all 0.3s ease;
+        padding: 0.5rem 1.5rem;
+    }
+
+    .submit-btn:hover {
+        background-color: #DB7093;
+        color: white;
+    }
+
+    .submit-btn:focus {
+        outline: none;
+        box-shadow: none;
+    }
+</style>
+
+<div style="background-color: #FFF8DC; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 10vh;">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <form class="row" method="post" enctype="multipart/form-data">
+                    <div class="form-card">
+                        <div class="card-body">
+                            {% csrf_token %}
+                            {% for field in form %}
+                                {% if field.name == 'status' and not perms.diary.can_unpublish_note %}
+                                    <!-- Скрываем поле status для пользователей без права can_unpublish_product -->
+                                {% else %}
+                                    <div class="form-group">
+                                        {{ field.label_tag }} {{ field }}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <button type="submit" class="btn submit-btn">
+                            {% if object %}
+                                Сохранить
+                            {% else %}
+                                Создать
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
